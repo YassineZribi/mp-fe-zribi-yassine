@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ProduitsService } from '../services/produits.service';
 import { Produit } from '../model/produit';
 import { NgForm } from '@angular/forms';
+import { CategoriesService } from '../services/categories.service';
+import { Categorie } from '../model/categorie';
 
 @Component({
   selector: 'app-ajout-produit',
@@ -11,14 +13,16 @@ import { NgForm } from '@angular/forms';
 export class AjoutProduitComponent implements OnInit {
   produits: Array<Produit> = [];
   nouveauProduit: Produit = new Produit();
+  categories: Array<Categorie> = [];
 
-  constructor(private produitsService: ProduitsService) { }
+  constructor(private produitsService: ProduitsService, private categoriesService: CategoriesService) { }
 
   ngOnInit(): void {
     //Message affiché au moment de l'affichage du composant
     console.log("Initialisation du composant:.....");
     //charger les données
     this.consulterProduits();
+    this.consulterCategories();
   }
 
   consulterProduits() {
@@ -42,24 +46,8 @@ export class AjoutProduitComponent implements OnInit {
 
   validerFormulaire(form: NgForm) {
     console.log(form.value);
-    //this.produits.push(this.produitCourant);
-    if (form.value.id != undefined) {
-      console.log("id non vide...");
-      for (const p of this.produits) {
-        console.log(p.code + ' : ' + p.designation + ': ' + p.prix);
-        if (p.id == form.value.id) {
-          // Produit existe
-          alert("Identificateur de produit déjà existant..");
-          // Quitter toute la méthode
-          return;
-        }
-      }
-      this.ajouterProduit(form.value)
-      form.reset()
-    }
-    else {
-      console.log("id vide...");
-    }
+    this.ajouterProduit(form.value)
+    form.reset()    
   }
 
   ajouterProduit(nouveau: Produit) {
@@ -72,12 +60,33 @@ export class AjoutProduitComponent implements OnInit {
             console.log("Succès POST");
             console.log('nouveau');
             // Ajout du nouveau produit aussi dans le tableau "produits" (FrontEnd)
-            this.produits.push(nouveau);
+            console.log(nouveau)
+            console.log(createdProduit)
+            this.produits.push(createdProduit);
             console.log("Ajout d'un nouveau produit:" + nouveau.designation);
           },
           //En cas d'erreur
           error: err => {
             console.log("Erreur POST");
+          }
+        }
+      )
+  }
+
+  consulterCategories() {
+    console.log("Récupérer la liste des categories");
+    //Appeler la méthode 'getCategories' du service pour récupérer les données du JSON
+    this.categoriesService.getCategories()
+      .subscribe(
+        {
+          //En cas de succès
+          next: data => {
+            console.log("Succès GET");
+            this.categories = data;
+          },
+          //En cas d'erreur
+          error: err => {
+            console.log("Erreur GET");
           }
         }
       )

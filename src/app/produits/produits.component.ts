@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Produit } from '../model/produit';
 import { NgForm } from '@angular/forms';
 import { ProduitsService } from '../services/produits.service';
+import { CategoriesService } from '../services/categories.service';
+import { Categorie } from '../model/categorie';
 
 @Component({
   selector: 'app-produits',
@@ -9,17 +11,20 @@ import { ProduitsService } from '../services/produits.service';
   styleUrls: ['./produits.component.css']
 })
 export class ProduitsComponent implements OnInit {
-  constructor(private produitsService: ProduitsService) { }
+  constructor(private produitsService: ProduitsService, private categoriesService: CategoriesService) { }
 
   ngOnInit(): void {
     //Message affiché au moment de l'affichage du composant
     console.log("Initialisation du composant:.....");
     //charger les données
     this.consulterProduits();
+    this.consulterCategories();
   }
 
   produits: Array<Produit> = [];
+  categories: Array<Categorie> = [];
   produitCourant = new Produit();
+  categorieCouranteId = -1;
   afficherFormulaire: boolean = false;
 
   supprimer(p: Produit) {
@@ -35,6 +40,7 @@ export class ProduitsComponent implements OnInit {
 
   validerFormulaire(form: NgForm) {
     console.log(form.value);
+    console.log(form.value.categorie)
     //this.produits.push(this.produitCourant);
     if (form.value.id != undefined) {
       console.log("id non vide...");
@@ -69,10 +75,12 @@ export class ProduitsComponent implements OnInit {
           //En cas de succès
           next: updatedProduit => {
             console.log("Succès PUT");
+            console.log(updatedProduit)
             //mettre à jour le produit aussi dans le tableau "produits" (FrontEnd)
             ancien.code = nouveau.code;
             ancien.designation = nouveau.designation;
             ancien.prix = nouveau.prix;
+            ancien.categorie = nouveau.categorie;
             console.log('Mise à jour du produit:'
               + ancien.designation);
               // Cacher le formulaire après validation de la modification du produit existant
@@ -86,15 +94,16 @@ export class ProduitsComponent implements OnInit {
       )
   }
 
-  consulterProduits() {
+  consulterProduits(categoryId?: number) {
     console.log("Récupérer la liste des produits");
     //Appeler la méthode 'getProduits' du service pour récupérer les données du JSON
-    this.produitsService.getProduits()
+    this.produitsService.getProduits(categoryId)
       .subscribe(
         {
           //En cas de succès
           next: data => {
             console.log("Succès GET");
+            console.log(data);
             this.produits = data;
           },
           //En cas d'erreur
@@ -133,7 +142,7 @@ export class ProduitsComponent implements OnInit {
 
   selectionnerProduit(produit: Produit) {
     this.afficherFormulaire = true;
-    
+    console.log(produit)
     // méthodes pour éviter le passage par référence
     
     // méthode 1
@@ -141,9 +150,33 @@ export class ProduitsComponent implements OnInit {
     this.produitCourant.code = produit.code;
     this.produitCourant.designation = produit.designation;
     this.produitCourant.prix = produit.prix;
+    this.produitCourant.categorie = produit.categorie;
 
     // méthode 2 (en utilisant le spread operator)
     // this.produitCourant = {...produit}
+  }
+
+  consulterCategories() {
+    console.log("Récupérer la liste des categories");
+    //Appeler la méthode 'getCategories' du service pour récupérer les données du JSON
+    this.categoriesService.getCategories()
+      .subscribe(
+        {
+          //En cas de succès
+          next: data => {
+            console.log("Succès GET");
+            this.categories = data;
+          },
+          //En cas d'erreur
+          error: err => {
+            console.log("Erreur GET");
+          }
+        }
+      )
+  }
+  onSelectChange(newOption: string) {
+    console.log('Selected Option:', newOption);
+    this.consulterProduits(newOption == "" ? undefined : Number(newOption))
   }
 }
 

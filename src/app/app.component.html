@@ -1,20 +1,23 @@
-<div class="container">
-  <nav>
-    <table>
-      <tr>
-        <td *ngFor="let action of actions">
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="#">Atelier Angular</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+        <li class="nav-item" *ngFor="let action of actions">
           <button 
-            class="btn btn-success"
+            [ngClass]="['btn', action === actionCourante ? 'btn-warning' : 'btn-success']"
             (click)="setActionCourante(action)"
-            [style.backgroundColor]="action==actionCourante ? 'yellow' : 'green'"
             routerLink="{{action.route}}">
             <i [class]="action.icon"></i>
             {{action.titre}}
           </button>
-        </td>
-      </tr>
-    </table>
-  </nav>
+        </li>
+      </ul>
+    </div>
   </div>
-  <router-outlet>
-  </router-outlet>
+</nav>
+<router-outlet>
+</router-outlet>
