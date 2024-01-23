@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Produit } from '../model/produit';
 import { NgForm } from '@angular/forms';
 import { ProduitsService } from '../services/produits.service';
 import { CategoriesService } from '../services/categories.service';
 import { Categorie } from '../model/categorie';
+import { ToastComponent } from '../toast/toast.component';
 
 @Component({
   selector: 'app-produits',
@@ -11,6 +12,8 @@ import { Categorie } from '../model/categorie';
   styleUrls: ['./produits.component.css']
 })
 export class ProduitsComponent implements OnInit {
+  @ViewChild(ToastComponent) toastComponent!: ToastComponent;
+
   constructor(private produitsService: ProduitsService, private categoriesService: CategoriesService) { }
 
   ngOnInit(): void {
@@ -81,6 +84,7 @@ export class ProduitsComponent implements OnInit {
             ancien.designation = nouveau.designation;
             ancien.prix = nouveau.prix;
             ancien.categorie = nouveau.categorie;
+            this.toastComponent.openToast(`Produit ${ancien.id} modifié !`);
             console.log('Mise à jour du produit:'
               + ancien.designation);
               // Cacher le formulaire après validation de la modification du produit existant
@@ -129,6 +133,7 @@ export class ProduitsComponent implements OnInit {
             if (index !== -1) {
               // Supprimer le produit référencé
               this.produits.splice(index, 1);
+              this.toastComponent.openToast(`Produit "${produit.designation}" supprimé !`);
               console.log("Suppression du produit:" + produit.designation);
             }
           },

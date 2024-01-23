@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProduitsService } from '../services/produits.service';
 import { Produit } from '../model/produit';
 import { NgForm } from '@angular/forms';
 import { CategoriesService } from '../services/categories.service';
 import { Categorie } from '../model/categorie';
+import { ToastComponent } from '../toast/toast.component';
 
 @Component({
   selector: 'app-ajout-produit',
@@ -14,8 +15,11 @@ export class AjoutProduitComponent implements OnInit {
   produits: Array<Produit> = [];
   nouveauProduit: Produit = new Produit();
   categories: Array<Categorie> = [];
+  @ViewChild(ToastComponent) toastComponent!: ToastComponent;
 
-  constructor(private produitsService: ProduitsService, private categoriesService: CategoriesService) { }
+  constructor(
+    private produitsService: ProduitsService, 
+    private categoriesService: CategoriesService) { }
 
   ngOnInit(): void {
     //Message affiché au moment de l'affichage du composant
@@ -64,6 +68,7 @@ export class AjoutProduitComponent implements OnInit {
             console.log(createdProduit)
             this.produits.push(createdProduit);
             console.log("Ajout d'un nouveau produit:" + nouveau.designation);
+            this.toastComponent.openToast("Produit ajouté !");
           },
           //En cas d'erreur
           error: err => {
