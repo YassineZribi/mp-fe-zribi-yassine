@@ -1,0 +1,26 @@
+<div class="container">
+  <h2 class="text-center my-3"> Ajout Catégorie </h2>
+  <form #categorieForm="ngForm" (ngSubmit)="validerFormulaire(categorieForm)">
+    <table class="mx-auto mt-5">
+      <!-- <tr>
+        <td> Id: </td>
+        <td> <input id="id" name="id" type="text" [(ngModel)]="nouvelleCategorie.id" required /> </td>
+      </tr> -->
+      <tr>
+        <td> <label for="code">Code:</label> </td>
+        <td> <input id="code" class="form-control" type ="text" name="code" [(ngModel)]="nouvelleCategorie.code"/> </td>
+      </tr>
+      <tr>
+        <td> <label for="libelle">Libellé:</label> </td>
+        <td> <input id="libelle" class="form-control" type ="text" name="libelle" [(ngModel)]="nouvelleCategorie.libelle"/> </td>
+      </tr>
+      <tr>
+        <td [align]="'center'" colspan="2" class="pt-2">
+          <input type="submit" class="btn btn-success" value="Valider" [disabled]="!categorieForm.form.valid" />
+          <button type="reset" class="btn btn-secondary ms-1">Effacer</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+<app-toast></app-toast>

@@ -17,4 +17,18 @@ export class CategoriesService {
   getCategories(): Observable<Array<Categorie>> {
     return this.http.get<Array<Categorie>>(this.urlHote);
   }
+
+  deleteCategorie(idP: number | undefined) {
+    // return this.http.delete(this.urlHote + idP);
+    return this.http.get(this.urlHote + "delete/" + idP);
+  }
+
+  addCategorie(nouveau: Categorie) {
+    return this.http.post<Categorie>(this.urlHote, nouveau);
+  }
+
+  updateCategorie(idP: number | undefined, nouveau: Categorie) {
+    // return this.http.put<Produit>(this.urlHote + idP, nouveau);
+    return this.http.put<Categorie>(this.urlHote, nouveau);
+  }
 }

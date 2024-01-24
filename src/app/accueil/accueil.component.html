@@ -1,4 +1,16 @@
 <div class="container">
   <h2 class="text-center my-3"> Acceuil </h2>
-  <p>accueil works!</p>
+  <div class="p-5 mt-5 d-flex justify-content-center gap-3">
+    <button 
+      *ngFor="let e of data" 
+      type="button" 
+      class="btn btn-light p-3 d-flex flex-column align-items-center"
+      routerLink="{{e.route}}"
+      style="min-width: 300px;"
+    >
+      <span class="h4">{{e.name | titlecase}}</span><br />
+      <i [ngClass]="[e.icon]" style="font-size: 5rem;"></i><br/>
+      <span class="h5">Total: <span class="badge bg-secondary">{{getNbElements(e.name)}}</span></span>
+    </button>
+  </div>
 </div>

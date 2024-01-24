@@ -8,7 +8,9 @@ import { ProduitsComponent } from './produits/produits.component';
 import { AjoutProduitComponent } from './ajout-produit/ajout-produit.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { ToastComponent } from './toast/toast.component'
+import { ToastComponent } from './toast/toast.component';
+import { CategoriesComponent } from './categories/categories.component';
+import { AjoutCategorieComponent } from './ajout-categorie/ajout-categorie.component'
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { ToastComponent } from './toast/toast.component'
     AccueilComponent,
     ProduitsComponent,
     AjoutProduitComponent,
-    ToastComponent
+    ToastComponent,
+    CategoriesComponent,
+    AjoutCategorieComponent
   ],
   imports: [
     BrowserModule,

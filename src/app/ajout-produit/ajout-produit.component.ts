@@ -12,7 +12,6 @@ import { ToastComponent } from '../toast/toast.component';
   styleUrls: ['./ajout-produit.component.css']
 })
 export class AjoutProduitComponent implements OnInit {
-  produits: Array<Produit> = [];
   nouveauProduit: Produit = new Produit();
   categories: Array<Categorie> = [];
   @ViewChild(ToastComponent) toastComponent!: ToastComponent;
@@ -25,27 +24,7 @@ export class AjoutProduitComponent implements OnInit {
     //Message affiché au moment de l'affichage du composant
     console.log("Initialisation du composant:.....");
     //charger les données
-    this.consulterProduits();
     this.consulterCategories();
-  }
-
-  consulterProduits() {
-    console.log("Récupérer la liste des produits");
-    //Appeler la méthode 'getProduits' du service pour récupérer les données du JSON
-    this.produitsService.getProduits()
-      .subscribe(
-        {
-          //En cas de succès
-          next: data => {
-            console.log("Succès GET");
-            this.produits = data;
-          },
-          //En cas d'erreur
-          error: err => {
-            console.log("Erreur GET");
-          }
-        }
-      )
   }
 
   validerFormulaire(form: NgForm) {
@@ -63,10 +42,7 @@ export class AjoutProduitComponent implements OnInit {
           next: createdProduit => {
             console.log("Succès POST");
             console.log('nouveau');
-            // Ajout du nouveau produit aussi dans le tableau "produits" (FrontEnd)
-            console.log(nouveau)
             console.log(createdProduit)
-            this.produits.push(createdProduit);
             console.log("Ajout d'un nouveau produit:" + nouveau.designation);
             this.toastComponent.openToast("Produit ajouté !");
           },

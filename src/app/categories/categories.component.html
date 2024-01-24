@@ -1,0 +1,57 @@
+<div class="container" *ngIf="afficherFormulaire">
+  <h1> Mise à jour Catégorie </h1>
+  <form #categorieForm="ngForm" (ngSubmit)="validerFormulaire(categorieForm)">
+    <table>
+      <tr>
+        <td> Id: </td>
+        <td> <input id="id" class="form-control" name="id" type="text" [(ngModel)]="categorieCourante.id" required readonly /> </td>
+      </tr>
+      <tr>
+        <td> <label for="code">Code:</label> </td>
+        <td> <input id="code" class="form-control" type="text" name="code" [(ngModel)]="categorieCourante.code"/> </td>
+      </tr>
+      <tr>
+        <td> <label for="libelle">Libellé:</label> </td>
+        <td> <input id="libelle" class="form-control" type="text" name="libelle" [(ngModel)]="categorieCourante.libelle"/> </td>
+      </tr>
+      <tr>
+        <td [align]="'center'" colspan="2">
+          <input class="btn btn-success" type="submit" value="Valider" [disabled]="!categorieForm.form.valid" />
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+<div class="container">
+  <h2 class="text-center my-3"> liste des catégories </h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> Id </th>
+        <th>Code</th>
+        <th>Libellé</th>
+        <th>Produits</th>
+        <th colspan="2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of categories">
+        <td> {{c.id}}</td>
+        <td> {{c.code}}</td>
+        <td> {{c.libelle}}</td>
+        <td> {{nbProduits(c.id)}}</td>
+        <td colspan="2" class="d-flex gap-1">
+          <button (click)="selectionnerCategorie(c)" class="btn btn-dark">
+            <i class="bi bi-pen"></i>
+            Editer
+          </button>
+          <button (click)="supprimer(c)" class="btn btn-danger">
+            <i class="bi bi-trash"></i>
+            Supprimer
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<app-toast></app-toast>

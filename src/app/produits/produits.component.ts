@@ -179,6 +179,7 @@ export class ProduitsComponent implements OnInit {
         }
       )
   }
+  
   onSelectChange(newOption: string) {
     console.log('Selected Option:', newOption);
     this.consulterProduits(newOption == "" ? undefined : Number(newOption))

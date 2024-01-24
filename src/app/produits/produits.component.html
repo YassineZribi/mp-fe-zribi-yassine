@@ -61,13 +61,11 @@
         <td> {{p.prix}}</td>
         <td *ngIf="p.categorie != null; else elseBlock">{{p.categorie.libelle}}</td>
         <ng-template #elseBlock><td><i class="bi bi-dash"></i></td></ng-template>
-        <td>
+        <td colspan="2" class="d-flex gap-1">
           <button (click)="selectionnerProduit(p)" class="btn btn-dark">
             <i class="bi bi-pen"></i>
             Editer
           </button>
-        </td>
-        <td>
           <button (click)="supprimer(p)" class="btn btn-danger">
             <i class="bi bi-trash"></i>
             Supprimer
