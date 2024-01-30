@@ -1,7 +1,7 @@
 <div class="container" *ngIf="afficherFormulaire">
-  <h1> Mise à jour Catégorie </h1>
+  <h2 class="text-center my-3"> Mise à jour Catégorie </h2>
   <form #categorieForm="ngForm" (ngSubmit)="validerFormulaire(categorieForm)">
-    <table>
+    <table class="mx-auto">
       <tr>
         <td> Id: </td>
         <td> <input id="id" class="form-control" name="id" type="text" [(ngModel)]="categorieCourante.id" required readonly /> </td>
@@ -15,7 +15,7 @@
         <td> <input id="libelle" class="form-control" type="text" name="libelle" [(ngModel)]="categorieCourante.libelle"/> </td>
       </tr>
       <tr>
-        <td [align]="'center'" colspan="2">
+        <td [align]="'center'" colspan="2" class="pt-2">
           <input class="btn btn-success" type="submit" value="Valider" [disabled]="!categorieForm.form.valid" />
         </td>
       </tr>

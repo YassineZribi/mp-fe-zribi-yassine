@@ -1,7 +1,7 @@
 <div class="container" *ngIf="afficherFormulaire">
-  <h1> Mise à jour Produit </h1>
+  <h2 class="text-center my-3"> Mise à jour Produit </h2>
   <form #produitForm="ngForm" (ngSubmit)="validerFormulaire(produitForm)">
-    <table>
+    <table class="mx-auto">
       <tr>
         <td> Id: </td>
         <td> <input id="id" class="form-control" name="id" type="text" [(ngModel)]="produitCourant.id" required readonly /> </td>
@@ -28,7 +28,7 @@
         </td>
       </tr>
       <tr>
-        <td [align]="'center'" colspan="2">
+        <td [align]="'center'" colspan="2" class="pt-2">
           <input class="btn btn-success" type="submit" value="Valider" [disabled]="!produitForm.form.valid" />
         </td>
       </tr>
