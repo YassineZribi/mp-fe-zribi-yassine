@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastComponent } from './toast/toast.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { AjoutCategorieComponent } from './ajout-categorie/ajout-categorie.component'
+import {DataTablesModule} from 'angular-datatables'
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AjoutCategorieComponent } from './ajout-categorie/ajout-categorie.compo
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    DataTablesModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -5,6 +5,8 @@ import { ProduitsService } from '../services/produits.service';
 import { CategoriesService } from '../services/categories.service';
 import { Categorie } from '../model/categorie';
 import { ToastComponent } from '../toast/toast.component';
+import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-produits',
@@ -14,14 +16,39 @@ import { ToastComponent } from '../toast/toast.component';
 export class ProduitsComponent implements OnInit {
   @ViewChild(ToastComponent) toastComponent!: ToastComponent;
 
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement!: DataTableDirective;
+
   constructor(private produitsService: ProduitsService, private categoriesService: CategoriesService) { }
 
   ngOnInit(): void {
     //Message affiché au moment de l'affichage du composant
     console.log("Initialisation du composant:.....");
+    this.dtOptions = {
+      pageLength: 5,
+      pagingType: 'full_numbers'
+    }
     //charger les données
     this.consulterProduits();
     this.consulterCategories();
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next(null);
+    });
   }
 
   produits: Array<Produit> = [];
@@ -29,6 +56,8 @@ export class ProduitsComponent implements OnInit {
   produitCourant = new Produit();
   categorieCouranteId = -1;
   afficherFormulaire: boolean = false;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject<any>();
 
   supprimer(p: Produit) {
     // Afficher une boite de dialogue pour confirmer la suppression
@@ -85,6 +114,7 @@ export class ProduitsComponent implements OnInit {
             ancien.prix = nouveau.prix;
             ancien.categorie = nouveau.categorie;
             this.toastComponent.openToast(`Produit ${ancien.id} modifié !`);
+            this.rerender();
             console.log('Mise à jour du produit:'
               + ancien.designation);
               // Cacher le formulaire après validation de la modification du produit existant
@@ -109,6 +139,7 @@ export class ProduitsComponent implements OnInit {
             console.log("Succès GET");
             console.log(data);
             this.produits = data;
+            this.rerender()
           },
           //En cas d'erreur
           error: err => {
@@ -134,6 +165,7 @@ export class ProduitsComponent implements OnInit {
               // Supprimer le produit référencé
               this.produits.splice(index, 1);
               this.toastComponent.openToast(`Produit "${produit.designation}" supprimé !`);
+              this.rerender();
               console.log("Suppression du produit:" + produit.designation);
             }
           },

@@ -5,6 +5,8 @@ import { CategoriesService } from '../services/categories.service';
 import { Categorie } from '../model/categorie';
 import { Produit } from '../model/produit';
 import { NgForm } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component({
   selector: 'app-categories',
@@ -14,20 +16,47 @@ import { NgForm } from '@angular/forms';
 export class CategoriesComponent implements OnInit {
   @ViewChild(ToastComponent) toastComponent!: ToastComponent;
 
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement!: DataTableDirective;
+
   constructor(private produitsService: ProduitsService, private categoriesService: CategoriesService) { }
 
   ngOnInit(): void {
     //Message affiché au moment de l'affichage du composant
     console.log("Initialisation du composant:.....");
+    this.dtOptions = {
+      pageLength: 5,
+      pagingType: 'full_numbers'
+    }
     //charger les données
     this.consulterProduits();
     this.consulterCategories();
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next(null);
+    });
   }
 
   produits: Array<Produit> = [];
   categories: Array<Categorie> = [];
   categorieCourante = new Categorie();
   afficherFormulaire: boolean = false;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject<any>();
 
   supprimer(c: Categorie) {
     // Afficher une boite de dialogue pour confirmer la suppression
@@ -81,6 +110,7 @@ export class CategoriesComponent implements OnInit {
             ancien.code = nouveau.code;
             ancien.libelle = nouveau.libelle;
             this.toastComponent.openToast(`Catégorie ${ancien.id} modifiée !`);
+            this.rerender();
             console.log('Mise à jour de la categorie:'
               + ancien.libelle);
               // Cacher le formulaire après validation de la modification de la categorie existante
@@ -104,6 +134,7 @@ export class CategoriesComponent implements OnInit {
           next: data => {
             console.log("Succès GET");
             this.categories = data;
+            this.rerender();
           },
           //En cas d'erreur
           error: err => {
@@ -129,6 +160,7 @@ export class CategoriesComponent implements OnInit {
               // Supprimer la categorie référencée
               this.categories.splice(index, 1);
               this.toastComponent.openToast(`Catégorie "${categorie.libelle}" supprimée !`);
+              this.rerender();
               console.log("Suppression de la categorie:" + categorie.libelle);
             }
           },
